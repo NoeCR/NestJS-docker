@@ -1,0 +1,19 @@
+version: '3.2'
+
+services:
+  bookstore-db:
+    container_name: bookstore-db
+    image: postgres:10-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: bookstore
+    ports:
+      - 5445:5432
+
+  # Optional to mount a container with the database administration tool
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8282:8080

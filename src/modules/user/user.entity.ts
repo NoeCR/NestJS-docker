@@ -8,6 +8,7 @@ import {
   ManyToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinTable,
 } from "typeorm";
 import { UserDetails } from "./user.details.entity";
 import { Role } from "../role/role.entity";
@@ -26,7 +27,7 @@ export class User extends BaseEntity {
   @Column({ type: "varchar", nullable: false })
   password: string;
 
-  @Column({ type: "varchar", default: "active", length: 8 })
+  @Column({ type: "varchar", default: "ACTIVE", length: 8 })
   status: string;
 
   @CreateDateColumn({ type: "timestamp", name: "created_at" })
@@ -43,6 +44,16 @@ export class User extends BaseEntity {
   details: UserDetails;
 
   @ManyToMany((type) => Role, (role) => role.users, { eager: true })
-  @JoinColumn({ name: "user_roles" })
+  @JoinTable({
+    name: "user_roles",
+    joinColumn: {
+      name: "users",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "roles",
+      referencedColumnName: "id",
+    },
+  })
   roles: Role[];
 }

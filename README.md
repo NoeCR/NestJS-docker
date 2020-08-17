@@ -69,6 +69,14 @@ docker exec -it training_training-db_1 psql -U root postgres
 
 ```
 
+### Migrations
+
+```
+  "migration:generate": "ts-node node_modules/.bin/typeorm migration:generate --config ./orm.config.json --name",
+  "migration:run": "ts-node node_modules/.bin/typeorm migration:run --config ./orm.config.json",
+  "migration:revert": "ts-node node_modules/.bin/typeorm migration:revert --config ./orm.config.json"
+```
+
 ## Test
 
 ```bash

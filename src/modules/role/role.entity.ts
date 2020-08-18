@@ -9,6 +9,7 @@ import {
   CreateDateColumn,
 } from "typeorm";
 import { User } from "../user/user.entity";
+import { Status } from "../../shared/entity-status.enum";
 
 @Entity("roles")
 export class Role extends BaseEntity {
@@ -25,7 +26,7 @@ export class Role extends BaseEntity {
   @JoinColumn()
   users: User[];
 
-  @Column({ type: "varchar", default: "active", length: 8 })
+  @Column({ type: "varchar", default: Status.ACTIVE, length: 8 })
   status: string;
 
   @CreateDateColumn({ type: "timestamp", name: "created_at" })

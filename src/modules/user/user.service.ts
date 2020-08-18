@@ -5,17 +5,20 @@ import {
 } from "@nestjs/common";
 import { UserRepository } from "./user.repository";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserDto } from "./dto/user.dto";
+import { Status } from "../../shared/entity-status.enum";
 import { User } from "./user.entity";
 import { UserDetails } from "./user.details.entity";
 import { getConnection } from "typeorm";
 import { Role } from "../role/role.entity";
+import { RoleRepository } from "../role/role.repository";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserRepository) private readonly _userRepository:
       UserRepository,
+    @InjectRepository(RoleRepository) private readonly _roleRepository:
+      RoleRepository,
   ) {}
 
   async get(id: number): Promise<User> {
@@ -25,7 +28,7 @@ export class UserService {
 
     const user: User = await this._userRepository.findOne(
       id,
-      { where: { status: "ACTIVE" } },
+      { where: { status: Status.ACTIVE } },
     );
 
     if (!user) {
@@ -37,7 +40,7 @@ export class UserService {
 
   async getAll(): Promise<User[]> {
     const users: User[] = await this._userRepository.find(
-      { where: { status: "ACTIVE" } },
+      { where: { status: Status.ACTIVE } },
     );
 
     return users;
@@ -62,14 +65,33 @@ export class UserService {
   }
 
   async delete(id: number): Promise<void> {
-    const user: User = await this._userRepository.findOne(
-      id,
-      { where: { status: "ACTIVE" } },
-    );
+    const user: User | void = await this._userExists(id);
     if (!user) {
       throw new NotFoundException();
     }
 
-    await this._userRepository.update(id, { status: "INACTIVE" });
+    await this._userRepository.update(id, { status: Status.INACTIVE });
+  }
+
+  async setRoleToUser(userId: number, roleId: number): Promise<void> {
+    const user: User | void = await this._userExists(userId);
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    const role: Role = await this._roleRepository.findOne(roleId);
+    if (!role) {
+      throw new NotFoundException("role not found");
+    }
+
+    user.roles.push(role);
+    await this._userRepository.update(userId, { roles: user.roles });
+  }
+
+  async _userExists(id: number): Promise<User | void> {
+    return await this._userRepository.findOne(
+      id,
+      { where: { status: Status.ACTIVE } },
+    );
   }
 }

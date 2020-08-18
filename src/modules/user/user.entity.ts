@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { UserDetails } from "./user.details.entity";
 import { Role } from "../role/role.entity";
+import { Status } from "../../shared/entity-status.enum";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -27,7 +28,7 @@ export class User extends BaseEntity {
   @Column({ type: "varchar", nullable: false })
   password: string;
 
-  @Column({ type: "varchar", default: "ACTIVE", length: 8 })
+  @Column({ type: "varchar", default: Status.ACTIVE, length: 8 })
   status: string;
 
   @CreateDateColumn({ type: "timestamp", name: "created_at" })

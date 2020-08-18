@@ -85,7 +85,7 @@ export class UserService {
     }
 
     user.roles.push(role);
-    await this._userRepository.update(userId, { roles: user.roles });
+    await this._userRepository.save(user);
   }
 
   async _userExists(id: number): Promise<User | void> {

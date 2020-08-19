@@ -4,17 +4,17 @@ import { UserDetails } from "../user.details.entity";
 
 export class UserDto {
   @IsNotEmpty()
-  id: number;
+  readonly id: number;
 
   @IsNotEmpty()
-  username: string;
+  readonly username: string;
 
   @IsNotEmpty()
-  email: string;
+  readonly email: string;
 
   @IsNotEmpty()
-  roles: RoleType[];
+  readonly roles: RoleType[];
 
   @IsNotEmpty()
-  details: UserDetails;
+  readonly details: UserDetails;
 }

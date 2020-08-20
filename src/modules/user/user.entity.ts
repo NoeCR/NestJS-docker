@@ -13,6 +13,7 @@ import {
 import { UserDetails } from "./user.details.entity";
 import { Role } from "../role/role.entity";
 import { Status } from "../../shared/entity-status.enum";
+import { Book } from "../book/book.entity";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -57,4 +58,18 @@ export class User extends BaseEntity {
     },
   })
   roles: Role[];
+
+  @ManyToMany((type) => Book, (book) => book.authors, { eager: true })
+  @JoinTable({
+    name: "user_books",
+    joinColumn: {
+      name: "authors",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "books",
+      referencedColumnName: "id",
+    },
+  })
+  books: Book[];
 }
